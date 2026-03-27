@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { signUp } from "../actions/auth";
+import { signIn, signUp } from "../actions/auth";
 import Link from "next/link";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState<"sign-up" | "log-in">("sign-up");
   const [error, setError] = useState("");
   const [credentials, setCredentials] = useState({
     email: "",
@@ -15,7 +16,12 @@ const Page = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const result = await signUp(credentials);
+      setError("");
+
+      const result =
+        mode === "sign-up"
+          ? await signUp(credentials)
+          : await signIn(credentials);
 
       if (result.error) {
         setError(result.error);
@@ -39,13 +45,26 @@ const Page = () => {
   }, [credentials]);
   return (
     <div className="p-5 flex flex-col items-center justify-center min-h-screen">
-      <Link href="/" className="-translate-y-30 hover:underline">LOGO</Link>
+      <Link href="/" className="-translate-y-30 hover:underline">
+        LOGO
+      </Link>
       <form
         className="min-w-90 border rounded-md p-5 -translate-y-24"
         onSubmit={handleSubmit}
       >
-        <div>
-          <button className="text-blue-500 py-5 text-2xl">Sign up</button>
+        <div className="space-x-5">
+          <button
+            className={`py-5 text-2xl cursor-pointer ${mode === "sign-up" ? "text-blue-500" : ""}`}
+            onClick={() => setMode("sign-up")}
+          >
+            Sign up
+          </button>
+          <button
+            className={`py-5 text-2xl cursor-pointer ${mode === "log-in" ? "text-blue-500" : ""}`}
+            onClick={() => setMode("log-in")}
+          >
+            Log in
+          </button>
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="email">Email</label>
@@ -74,9 +93,15 @@ const Page = () => {
         <div>
           <p className="text-sm mt-3 text-red-400">{error && error}</p>
         </div>
-        <button className="px-5 py-1.5 mt-7 border rounded-md cursor-pointer hover:scale-102">
-          {loading ? "Signing up..." : "Sign up"}
-        </button>
+        {mode === "sign-up" ? (
+          <button className="px-5 py-1.5 mt-7 border rounded-md cursor-pointer hover:scale-102">
+            {loading ? "Signing up..." : "Sign up"}
+          </button>
+        ) : (
+          <button className="px-5 py-1.5 mt-7 border rounded-md cursor-pointer hover:scale-102">
+            {loading ? "Loggin in..." : "Log in"}
+          </button>
+        )}
       </form>
     </div>
   );

@@ -2,6 +2,8 @@
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
 import { createSession } from "@/lib/session";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 interface Credentials {
   email: string;
@@ -24,5 +26,31 @@ export async function signUp(credentials: Credentials) {
 
   await createSession(user.id, user.email);
 
-  return { success: true };
+  redirect("/");
+}
+
+export async function logOut() {
+  const cookieStore = await cookies();
+  cookieStore.delete("session");
+  redirect("/sign-up");
+}
+
+export async function signIn(credentials: Credentials) {
+  const { email, password } = credentials;
+
+  const user = await prisma.user.findUnique({ where: { email } });
+
+  if (!user) {
+    return { error: "No user found with this email." };
+  }
+
+  const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
+
+  if (!passwordMatch) {
+    return { error: "Incorrect password" };
+  }
+
+  await createSession(user.id, user.email);
+
+  redirect("/");
 }

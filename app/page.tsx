@@ -1,15 +1,27 @@
 import Link from "next/link";
 import { getSession } from "@/lib/session";
+import { logOut } from "./actions/auth";
 
 export default async function Home() {
   const session = await getSession();
-  console.log(session);
+
   return (
     <div className="px-5">
       <header>
         <nav className="flex justify-between items-center py-5">
           <Link href="/">LOGO</Link>
-          <Link href="/sign-up">Sign up</Link>
+          <div>
+            {session ? (
+              <div className="space-x-6">
+                <span>{session.email}</span>
+                <button className="cursor-pointer hover:opacity-80" onClick={logOut}>
+                  Log out
+                </button>
+              </div>
+            ) : (
+              <Link href="/sign-up">Sign up</Link>
+            )}
+          </div>
         </nav>
       </header>
       <main className="mx-auto mt-10">
