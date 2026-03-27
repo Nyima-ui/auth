@@ -1,6 +1,7 @@
 "use server";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
+import { createSession } from "@/lib/session";
 
 interface Credentials {
   email: string;
@@ -17,9 +18,11 @@ export async function signUp(credentials: Credentials) {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  await prisma.user.create({
+  const user = await prisma.user.create({
     data: { email, hashedPassword },
   });
+
+  await createSession(user.id, user.email);
 
   return { success: true };
 }
