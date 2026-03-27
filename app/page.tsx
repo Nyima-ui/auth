@@ -14,7 +14,10 @@ export default async function Home() {
             {session ? (
               <div className="space-x-6">
                 <span>{session.email}</span>
-                <button className="cursor-pointer hover:opacity-80" onClick={logOut}>
+                <button
+                  className="cursor-pointer hover:opacity-80"
+                  onClick={logOut}
+                >
                   Log out
                 </button>
               </div>
@@ -22,6 +25,7 @@ export default async function Home() {
               <Link href="/sign-up">Sign up</Link>
             )}
           </div>
+          <Link href="/dashboard">Dashboard</Link>
         </nav>
       </header>
       <main className="mx-auto mt-10">
