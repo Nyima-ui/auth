@@ -1,15 +1,32 @@
 "use client";
 import { useEffect, useState } from "react";
+import { signUp } from "../actions/auth";
+import Link from "next/link";
 
 const Page = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    try {
+      setLoading(true);
+      const result = await signUp(credentials);
 
+      if (result.error) {
+        setError(result.error);
+        return;
+      }
+    } catch (error) {
+      setError("Something went wrong. Please try again.");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -19,9 +36,10 @@ const Page = () => {
 
   useEffect(() => {
     //  console.log(credentials)
-  }, [credentials])
+  }, [credentials]);
   return (
-    <div className="p-5 flex items-center justify-center min-h-screen">
+    <div className="p-5 flex flex-col items-center justify-center min-h-screen">
+      <Link href="/" className="-translate-y-30 hover:underline">LOGO</Link>
       <form
         className="min-w-90 border rounded-md p-5 -translate-y-24"
         onSubmit={handleSubmit}
@@ -37,6 +55,7 @@ const Page = () => {
             id="email"
             value={credentials.email}
             onChange={handleChange}
+            required
             className="focus:outline shadow-md shadow-gray-600 border rounded-md focus:ring-[3px] focus:ring-blue-300 focus:border-transparent"
           />
         </div>
@@ -48,11 +67,15 @@ const Page = () => {
             id="password"
             value={credentials.password}
             onChange={handleChange}
+            required
             className="focus:outline shadow-md shadow-gray-600 border rounded-md focus:ring-[3px] focus:ring-blue-300 focus:border-transparent"
           />
         </div>
+        <div>
+          <p className="text-sm mt-3 text-red-400">{error && error}</p>
+        </div>
         <button className="px-5 py-1.5 mt-7 border rounded-md cursor-pointer hover:scale-102">
-          Sign up
+          {loading ? "Signing up..." : "Sign up"}
         </button>
       </form>
     </div>
