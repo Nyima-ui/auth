@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
       code,
       client_id: process.env.GOOGLE_CLIENT_ID!,
       client_secret: process.env.GOOGLE_CLIENT_SECRET!,
-      redirect_uri: "http://localhost:3000/api/auth/callback/google",
+      redirect_uri: "https://auth-ebon.vercel.app/api/auth/callback/google",
       grant_type: "authorization_code",
     }),
   });
