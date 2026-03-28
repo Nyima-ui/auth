@@ -117,6 +117,18 @@ const Page = () => {
         />
         <span>Sign in with Google</span>
       </Link>
+      <Link
+        href=""
+        className="border -translate-y-10 px-5 py-2.5 rounded-md flex items-center gap-3 cursor-pointer hover:scale-102"
+      >
+        <Image
+          height={25}
+          width={25}
+          src="https://line-up-peach.vercel.app/github.svg"
+          alt="Google icon"
+        />
+        <span>Sign in with GitHub</span>
+      </Link>
     </div>
   );
 };
