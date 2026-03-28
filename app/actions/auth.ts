@@ -44,10 +44,11 @@ export async function signIn(credentials: Credentials) {
     return { error: "No user found with this email." };
   }
 
-  const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
-
-  if (!passwordMatch) {
-    return { error: "Incorrect password" };
+  if (user.hashedPassword) {
+    const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
+    if (!passwordMatch) {
+      return { error: "Incorrect password" };
+    }
   }
 
   await createSession(user.id, user.email);
