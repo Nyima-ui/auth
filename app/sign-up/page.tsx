@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { signIn, signUp } from "../actions/auth";
 import Link from "next/link";
+import Image from "next/image";
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
@@ -103,6 +104,19 @@ const Page = () => {
           </button>
         )}
       </form>
+
+      <Link
+        href="/api/auth/google"
+        className="border -translate-y-15 px-5 py-2.5 rounded-md flex items-center gap-3 cursor-pointer hover:scale-102"
+      >
+        <Image
+          height={25}
+          width={25}
+          src="/google-icon-logo-svgrepo-com.svg"
+          alt="Google icon"
+        />
+        <span>Sign in with Google</span>
+      </Link>
     </div>
   );
 };
